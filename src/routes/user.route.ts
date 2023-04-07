@@ -37,10 +37,29 @@ userRouter.get(
   UserController.getProduct
 );
 // ---------------------Products----------------------------------
-userRouter.get(
-  "/get-data",
-  // RequestValidation.validateFunction(requestValidationConfig.register),
-  UserController.getData
+
+// ----------------------CARTS-----------------------------------
+userRouter.post(
+  "/add-cart/:userId",
+  RequestValidation.validateFunction(requestValidationConfig.addCart),
+  UserController.addCart
 );
+
+userRouter.put(
+  "/update-cart/:Id",
+  RequestValidation.validateFunction(requestValidationConfig.updateCart),
+  UserController.updateCart
+);
+userRouter.delete(
+  "/delete-card/:Id",
+  RequestValidation.validateFunction(requestValidationConfig.deleteCart),
+  UserController.deleteCart
+);
+userRouter.get(
+  "/get-cart-details",
+  RequestValidation.validateFunction(requestValidationConfig.getCart),
+  UserController.getCart
+);
+// ----------------------CARTS-----------------------------------
 
 export default userRouter;

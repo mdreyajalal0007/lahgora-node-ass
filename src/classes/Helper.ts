@@ -1,4 +1,7 @@
+import { NextFunction } from "express";
 import { Environment } from "../constants/Environment";
+import { UserRole, UserModel, UserSchema } from "../models/user.model";
+import { HttpResponse } from "./HttpResponse";
 
 const { scryptSync } = require("crypto");
 const jwt = require("jsonwebtoken");
@@ -32,7 +35,7 @@ export class Helper {
     token = `Bearer ${token}`;
     return token;
   }
-  
+
   static async validateLoginToken(token: string) {
     try {
       const decoded = await jwt.verify(token, Environment.JWT_SECRET_TOKEN);
@@ -41,7 +44,6 @@ export class Helper {
       return null;
     }
   }
-
 
   // static protectedRoute(roles: UserRole[]) {
   //   return async (req: Request, res: Response, next: NextFunction) => {
@@ -77,13 +79,13 @@ export class Helper {
 
   //     decodedToken = decodedToken as UserModel;
 
-  //     if (decodedToken["id"]) {
-  //       const user = await UserSchema.activeUserById(decodedToken["id"]);
-  //       if (!user) {
-  //         unauthorizedResponse("User is deactivated.");
-  //         return;
-  //       }
-  //     }
+  // if (decodedToken["id"]) {
+  //   const user = await UserSchema.activeUserById(decodedToken["id"]);
+  //   if (!user) {
+  //     unauthorizedResponse("User is deactivated.");
+  //     return;
+  //   }
+  // }
   //     if (
   //       decodedToken["userRole"] &&
   //       roles.includes(decodedToken["userRole"])
@@ -100,6 +102,4 @@ export class Helper {
   static getUserId(res: any) {
     return res.locals.userData.id;
   }
-
-  
 }

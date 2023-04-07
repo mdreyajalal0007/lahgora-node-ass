@@ -24,7 +24,7 @@ export const requestValidationConfig = {
     body("emailId").isEmail().exists(),
     body("mobileNumber").isLength({ min: 10, max: 10 }).isNumeric().exists(),
     body("country").isLength({ min: 3, max: 25 }).isString().exists(),
-    body("storeName").isLength({ min: 3, max: 25 }).isString().exists(),
+    body("storeName").isLength({ min: 3, max: 25 }).isString().optional(),
     body("password").isLength({ min: 3, max: 25 }).isString().exists(),
     body("userRole")
       .isLength({ min: 3, max: 25 })
@@ -57,7 +57,23 @@ export const requestValidationConfig = {
 
   deleteProduct: [param("Id").isMongoId().exists()],
   getProduct: [
-    query("userId").isMongoId().optional(),
+    query("userId").isMongoId().exists(),
     query("Id").isMongoId().optional(),
+  ],
+
+  addCart:[
+    param("userId").isMongoId().exists(),
+    body("items").isArray().optional()
+  ],
+  updateCart:[
+    query("Id").isMongoId().optional(),
+    body("items").isArray().optional()
+  ],
+  deleteCart:[
+    param("Id").isMongoId().exists(),
+  ],
+  getCart:[
+    query("userId").isMongoId().exists(),
+
   ],
 };

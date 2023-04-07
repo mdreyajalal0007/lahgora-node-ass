@@ -1,4 +1,5 @@
 export enum IDatabaseSchema {
   USERS = "users",
-  PRODUCT ="product"
+  PRODUCT ="product",
+  CART = "cart"
 }

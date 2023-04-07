@@ -13,7 +13,7 @@ export interface ProductModel {
 
 const schema = new Schema<ProductModel>(
   {
-    userId: { type: Schema.Types.ObjectId, required: true },
+    userId: { type: Schema.Types.ObjectId, required: true, ref:IDatabaseSchema.USERS },
     productName: { type: String, required: true },
     image: { type: String, required: true },
     description: { type: String, required: true },

@@ -1,4 +1,5 @@
 import { Helper } from "../classes/Helper";
+import { CartSchema } from "../models/cart.model";
 import { ProductSchema } from "../models/product.model";
 import { UserSchema } from "../models/user.model";
 
@@ -51,17 +52,6 @@ export class UserService {
 
       result = result.toObject();
       result.accessToken = await Helper.generateLoginToken(result);
-      callback(result);
-    } catch {
-      callback(false);
-    }
-  }
-
-  static async getData(callback: Function) {
-    try {
-      console.log("hhhhhhhhhhhh");
-
-      const result = await UserSchema.find({});
       callback(result);
     } catch {
       callback(false);
@@ -130,10 +120,81 @@ export class UserService {
     }
   }
 
-  static async getProduct(UserId:any, Id: any, callback: Function) {
+  static async getProduct(UserId: any, Id: any, callback: Function) {
+    try {
+      if (UserId && Id) {
+        const result = await ProductSchema.find({
+          userId: UserId,
+          _id: Id,
+          isDelete: false,
+        }).populate("userId");
+        callback(result);
+        return;
+      }
+      if (UserId && !Id) {
+        const result = await ProductSchema.find({
+          userId: UserId,
+          isDelete: false,
+        }).populate("userId");
+        callback(result);
+      }
+    } catch {
+      callback(false);
+    }
+  }
+
+  //-------------------------------------------------------------------
+
+  static async addCart(
+    params: {
+      items: string;
+    },
+    UserId: any,
+    callback: Function
+  ) {
+    try {
+      await CartSchema.create({
+        userId: UserId,
+        items: params.items,
+      });
+      callback(true);
+    } catch {
+      callback(false);
+    }
+  }
+
+  static async updateCart(
+    params: {
+      items: string;
+    },
+    Id: any,
+    callback: Function
+  ) {
+    try {
+      await CartSchema.findByIdAndUpdate(Id, {
+        items: params.items,
+      });
+      callback(true);
+    } catch {
+      callback(false);
+    }
+  }
+
+  static async deleteCart(Id: any, callback: Function) {
+    try {
+      await CartSchema.findByIdAndUpdate(Id, {
+        isDelete: true,
+      });
+      callback(true);
+    } catch {
+      callback(false);
+    }
+  }
+
+  static async getCart(UserId: any, Id: any, callback: Function) {
     try {
       if (Id && Id.length) {
-        const result = await ProductSchema.find({
+        const result = await CartSchema.find({
           userId: UserId,
           _id: Id,
           isDelete: false,
@@ -141,7 +202,7 @@ export class UserService {
         callback(result);
         return;
       } else {
-        const result = await ProductSchema.find({
+        const result = await CartSchema.find({
           userId: UserId,
           isDelete: false,
         });

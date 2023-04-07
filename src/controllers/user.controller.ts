@@ -60,23 +60,6 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const getData = async (req: Request, res: Response) => {
-  console.log("hhhhhhhhhhhh");
-  try {
-    UserService.getData((result: any) => {
-      console.log("hhhhhhhhhhhh");
-
-      new HttpResponse(
-        res,
-        result ? "Welcome to ---------." : "Wrong username or password.",
-        result,
-        result ? HttpStatuses.OK : HttpStatuses.BAD_REQUEST
-      ).sendResponse();
-    });
-  } catch (error) {
-    new HttpResponse(res).sendErrorResponse(error);
-  }
-};
 
 export const addProduct = async (req: Request, res: Response) => {
   try {
@@ -146,6 +129,86 @@ export const deleteProduct = async (req: Request, res: Response) => {
 export const getProduct = async (req: Request, res: Response) => {
   try {
     UserService.getProduct(req.query.userId, req.query.Id, (result: any) => {
+      new HttpResponse(
+        res,
+        result.length === 0
+          ? "No records found."
+          : result.length >= 1
+          ? "Product fetched successfully."
+          : "Error while fetching product details.",
+        result,
+        result.length >= 0 ? HttpStatuses.OK : HttpStatuses.BAD_REQUEST
+      ).sendResponse();
+    });
+  } catch (error) {
+    new HttpResponse(res).sendErrorResponse(error);
+  }
+};
+
+
+//----------------------------------------------------------
+
+
+export const addCart = async (req: Request, res: Response) => {
+  try {
+    const body = req.body;
+    const data = {
+      items: body.items,
+    };
+    UserService.addCart(data, req.params.userId, (result: any) => {
+      new HttpResponse(
+        res,
+        result ? "Product successfully added to the cart." : "Error while adding products.",
+        result,
+        result ? HttpStatuses.CREATE : HttpStatuses.BAD_REQUEST
+      ).sendResponse();
+    });
+  } catch (error) {
+    new HttpResponse(res).sendErrorResponse(error);
+  }
+};
+
+export const updateCart = async (req: Request, res: Response) => {
+  try {
+    const body = req.body;
+    const data = {
+     items: body.items,
+    };
+    UserService.updateCart(data, req.params.Id, (result: any) => {
+      new HttpResponse(
+        res,
+        result
+          ? "Cart updated successfully."
+          : "Error while updating cart.",
+        result,
+        result ? HttpStatuses.OK : HttpStatuses.BAD_REQUEST
+      ).sendResponse();
+    });
+  } catch (error) {
+    new HttpResponse(res).sendErrorResponse(error);
+  }
+};
+
+export const deleteCart = async (req: Request, res: Response) => {
+  try {
+    UserService.deleteCart(req.params.Id, (result: any) => {
+      new HttpResponse(
+        res,
+        result
+          ? "cart deleted successfully."
+          : "Error while deleting cart.",
+        result,
+        result ? HttpStatuses.OK : HttpStatuses.BAD_REQUEST
+      ).sendResponse();
+    });
+  } catch (error) {
+    new HttpResponse(res).sendErrorResponse(error);
+  }
+};
+
+export const getCart = async (req: Request, res: Response) => {
+  try {
+    UserService.getCart(req.query.userId, req.query.Id, (result: any) => {
       new HttpResponse(
         res,
         result.length === 0
