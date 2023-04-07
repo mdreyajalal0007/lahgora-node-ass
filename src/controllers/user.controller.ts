@@ -195,7 +195,7 @@ export const deleteCart = async (req: Request, res: Response) => {
       new HttpResponse(
         res,
         result
-          ? "cart deleted successfully."
+          ? "Cart deleted successfully."
           : "Error while deleting cart.",
         result,
         result ? HttpStatuses.OK : HttpStatuses.BAD_REQUEST
@@ -208,7 +208,7 @@ export const deleteCart = async (req: Request, res: Response) => {
 
 export const getCart = async (req: Request, res: Response) => {
   try {
-    UserService.getCart(req.query.userId, req.query.Id, (result: any) => {
+    UserService.getCart(req.query.userId,(result: any) => {
       new HttpResponse(
         res,
         result.length === 0

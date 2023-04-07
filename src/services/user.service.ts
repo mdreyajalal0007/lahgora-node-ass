@@ -182,36 +182,21 @@ export class UserService {
 
   static async deleteCart(Id: any, callback: Function) {
     try {
-      await CartSchema.findByIdAndUpdate(Id, {
-        isDelete: true,
-      });
+      await CartSchema.findByIdAndDelete(Id);
       callback(true);
     } catch {
       callback(false);
     }
   }
 
-  static async getCart(UserId: any, Id: any, callback: Function) {
+  static async getCart(UserId: any, callback: Function) {
     try {
-      if (Id && Id.length) {
         const result = await CartSchema.find({
           userId: UserId,
-          _id: Id,
           isDelete: false,
-        });
+        }).populate("userId").populate("items");
         callback(result);
         return;
-      } else {
-        const result = await CartSchema.find({
-          userId: UserId,
-          isDelete: false,
-        });
-        callback(result);
-      }
-      await ProductSchema.findByIdAndUpdate(Id, {
-        isDelete: true,
-      });
-      callback(true);
     } catch {
       callback(false);
     }

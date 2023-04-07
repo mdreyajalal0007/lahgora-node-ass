@@ -1,4 +1,4 @@
-import { NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Environment } from "../constants/Environment";
 import { UserRole, UserModel, UserSchema } from "../models/user.model";
 import { HttpResponse } from "./HttpResponse";
@@ -45,59 +45,59 @@ export class Helper {
     }
   }
 
-  // static protectedRoute(roles: UserRole[]) {
-  //   return async (req: Request, res: Response, next: NextFunction) => {
-  //     const unauthorizedResponse = (message?: string) => {
-  //       new HttpResponse(
-  //         res,
-  //         message ? message : "User unauthorized.",
-  //         null,
-  //         401
-  //       ).sendResponse();
-  //     };
+  static protectedRoute(roles: UserRole[]) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const unauthorizedResponse = (message?: string) => {
+        new HttpResponse(
+          res,
+          message ? message : "User unauthorized.",
+          null,
+          401
+        ).sendResponse();
+      };
 
-  //     let authToken = req.headers.authorization;
+      let authToken = req.headers.authorization;
 
-  //     if (!authToken) {
-  //       unauthorizedResponse();
-  //       return;
-  //     }
+      if (!authToken) {
+        unauthorizedResponse();
+        return;
+      }
 
-  //     if (!authToken.includes("Bearer ")) {
-  //       unauthorizedResponse();
-  //       return;
-  //     }
+      if (!authToken.includes("Bearer ")) {
+        unauthorizedResponse();
+        return;
+      }
 
-  //     authToken = authToken.replace("Bearer ", "");
+      authToken = authToken.replace("Bearer ", "");
 
-  //     let decodedToken = await this.validateLoginToken(authToken);
+      let decodedToken = await this.validateLoginToken(authToken);
 
-  //     if (!decodedToken) {
-  //       unauthorizedResponse();
-  //       return;
-  //     }
+      if (!decodedToken) {
+        unauthorizedResponse();
+        return;
+      }
 
-  //     decodedToken = decodedToken as UserModel;
+      decodedToken = decodedToken as UserModel;
 
-  // if (decodedToken["id"]) {
-  //   const user = await UserSchema.activeUserById(decodedToken["id"]);
-  //   if (!user) {
-  //     unauthorizedResponse("User is deactivated.");
-  //     return;
-  //   }
-  // }
-  //     if (
-  //       decodedToken["userRole"] &&
-  //       roles.includes(decodedToken["userRole"])
-  //     ) {
-  //       res.locals.userData = decodedToken;
-  //       next();
-  //     } else {
-  //       unauthorizedResponse();
-  //       return;
-  //     }
-  //   };
-  // }
+      // if (decodedToken["id"]) {
+      //   const user = await UserSchema.activeUserById(decodedToken["id"]);
+      //   if (!user) {
+      //     unauthorizedResponse("User is deactivated.");
+      //     return;
+      //   }
+      // }
+      if (
+        decodedToken["userRole"] &&
+        roles.includes(decodedToken["userRole"])
+      ) {
+        res = decodedToken;
+        next();
+      } else {
+        unauthorizedResponse();
+        return;
+      }
+    };
+  }
 
   static getUserId(res: any) {
     return res.locals.userData.id;
