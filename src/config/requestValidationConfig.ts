@@ -36,4 +36,28 @@ export const requestValidationConfig = {
     body("emailId").isEmail().exists().custom(userNotExists),
     body("password").isLength({ min: 6, max: 15 }).exists(),
   ],
+
+  addProduct: [
+    param("userId").isMongoId().exists(),
+    body("productName").isString().exists(),
+    body("image").isString().exists(),
+    body("description").isString().exists(),
+    body("price").isNumeric().exists(),
+    body("quantity").isNumeric().exists(),
+  ],
+
+  updateProduct: [
+    param("Id").isMongoId().exists(),
+    body("productName").isString().optional(),
+    body("image").isString().optional(),
+    body("description").isString().optional(),
+    body("price").isNumeric().optional(),
+    body("quantity").isNumeric().optional(),
+  ],
+
+  deleteProduct: [param("Id").isMongoId().exists()],
+  getProduct: [
+    query("userId").isMongoId().optional(),
+    query("Id").isMongoId().optional(),
+  ],
 };

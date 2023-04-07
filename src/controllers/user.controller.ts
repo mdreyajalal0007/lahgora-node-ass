@@ -16,7 +16,6 @@ export const register = async (req: Request, res: Response) => {
       userRole: body.userRole,
     };
     UserService.register(data, (result: any) => {
-      console.log(result, "-------999999");
       new HttpResponse(
         res,
         result === "true"
@@ -72,6 +71,90 @@ export const getData = async (req: Request, res: Response) => {
         result ? "Welcome to ---------." : "Wrong username or password.",
         result,
         result ? HttpStatuses.OK : HttpStatuses.BAD_REQUEST
+      ).sendResponse();
+    });
+  } catch (error) {
+    new HttpResponse(res).sendErrorResponse(error);
+  }
+};
+
+export const addProduct = async (req: Request, res: Response) => {
+  try {
+    const body = req.body;
+    const data = {
+      productName: body.productName,
+      description: body.description,
+      image: body.description,
+      price: body.price,
+      quantity: body.quantity,
+    };
+    UserService.addProduct(data, req.params.userId, (result: any) => {
+      new HttpResponse(
+        res,
+        result ? "Product added successfully." : "Error while adding products.",
+        result,
+        result ? HttpStatuses.CREATE : HttpStatuses.BAD_REQUEST
+      ).sendResponse();
+    });
+  } catch (error) {
+    new HttpResponse(res).sendErrorResponse(error);
+  }
+};
+
+export const updateProduct = async (req: Request, res: Response) => {
+  try {
+    const body = req.body;
+    const data = {
+      productName: body.productName,
+      description: body.description,
+      image: body.description,
+      price: body.price,
+      quantity: body.quantity,
+    };
+    UserService.updateProduct(data, req.params.Id, (result: any) => {
+      new HttpResponse(
+        res,
+        result
+          ? "Product updated successfully."
+          : "Error while updating products.",
+        result,
+        result ? HttpStatuses.OK : HttpStatuses.BAD_REQUEST
+      ).sendResponse();
+    });
+  } catch (error) {
+    new HttpResponse(res).sendErrorResponse(error);
+  }
+};
+
+export const deleteProduct = async (req: Request, res: Response) => {
+  try {
+    UserService.deleteProduct(req.params.Id, (result: any) => {
+      new HttpResponse(
+        res,
+        result
+          ? "Product deleted successfully."
+          : "Error while deleting products.",
+        result,
+        result ? HttpStatuses.OK : HttpStatuses.BAD_REQUEST
+      ).sendResponse();
+    });
+  } catch (error) {
+    new HttpResponse(res).sendErrorResponse(error);
+  }
+};
+
+export const getProduct = async (req: Request, res: Response) => {
+  try {
+    UserService.getProduct(req.query.userId, req.query.Id, (result: any) => {
+      new HttpResponse(
+        res,
+        result.length === 0
+          ? "No records found."
+          : result.length >= 1
+          ? "Product fetched successfully."
+          : "Error while fetching product details.",
+        result,
+        result.length >= 0 ? HttpStatuses.OK : HttpStatuses.BAD_REQUEST
       ).sendResponse();
     });
   } catch (error) {
